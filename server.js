@@ -31,7 +31,7 @@ function check_haiku(haiku){
 };
 
 app.get('/',function (req,res) {
-	res.send('Fuck You RACHEL INVEST MORE');
+	res.send('Homepage');
 });
 
 app.get('/haikus',function (req,res) {
@@ -44,28 +44,32 @@ app.get('/haikus',function (req,res) {
 	  console.log("Connected!");
 	  con.query(`SELECT author,line_1,line_2,line_3 FROM HAIKUS ORDER BY id DESC`, function (err, result) {
 	    if (err) throw err;
-	    console.log(result);
+	    return(result);
 	  });
 	});
 	});
 });
 
 app.post('/add_haiku',function(req,req){
+	con.connect(function(err) {
 	console.log(req.body)
 	for (haiku in req.body){
-		new_haiku = Haiku(haiku.author,haiku.line_1,haiku.line_2,haiku_1.line_3)
+		new_haiku = Haiku()
 	
-			con.connect(function(err) {
+			
 			  if (err) throw err;
 			  console.log("Connected!");
-			  con.query(`INESERT  * From Haikus
-			  			 Order By id DESC`, function (err, result) {
-			    if (err) throw err;
-			    res.status() result;
-			  });
+				con.query(`Insert INTO haikus (author,line_1,line_2,line_3) VALUES ?`,
+					[haiku.author,haiku.line_1,haiku.line_2,haiku_1.line_3], function (err, result) {
+			    if (err) res.status(500).json({ error: err.message });;
+			    
+			  
 	});
 		
 	}
+	}).then(function(){
+		res.send(200)
+	});
 
 });
 
