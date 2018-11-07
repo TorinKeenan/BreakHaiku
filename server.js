@@ -13,6 +13,11 @@ var con = mysql.createConnection({
   database: 'haikus'
 });
 
+con.connect(function(err) {
+	if (err) throw err;
+   
+		 console.log("Connected!");
+});
 
 
 class Haiku{
@@ -30,22 +35,17 @@ app.get('/',function (req,res) {
 });
 
 app.get('/haikus',function (req,res) {
-	con.connect(function(err) {
-	if (err) throw err;
-    console.log("Connected!");
-		con.connect(function(err) {
-			if (err) console.error(err.message);
-		 	console.log("Connected!");
-		    con.query(`SELECT author,line_1,line_2,line_3 FROM HAIKUS ORDER BY id DESC`, function (err, result) {
+	
+		 con.query(`SELECT author,line_1,line_2,line_3 FROM HAIKUS ORDER BY id DESC`, function (err, result) {
 			    if (err) throw err;
-			    return(result);
+			    res.json(result);
 		    });
-		});
-	});
+		 console.log("request recieved")
+	
+
 });
 
-app.post('/add_haiku',function(req,req){
-	con.connect(function(err) {
+app.post('/add_haiku',function(req,res){
 		console.log(req.body)
 		for (haiku in req.body){			
 			if (err) throw err;
@@ -54,11 +54,9 @@ app.post('/add_haiku',function(req,req){
 					[haiku.author,haiku.line_1,haiku.line_2,haiku_1.line_3], function (err, result) {
 				    	if (err) res.status(500).json({ error: err.message });;
 					});
-				}
-	}).then(function(){
+		}
 		res.send(200)
-	});
-
+		
 });
 
 app.listen(3000, function(){
